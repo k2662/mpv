@@ -12,13 +12,16 @@ fi
 
 PKG_CONFIG_PATH="${FFMPEG_SYSROOT}/lib/pkgconfig/" CC="${CC}" CXX="${CXX}" \
 meson setup build \
-    --werror \
     -Dprefix="${MPV_INSTALL_PREFIX}" \
-    -D{c_args,objc_args}="-Wno-error=deprecated -Wno-error=deprecated-declarations" \
+    -D{c_args,objc_args}="-Wno-error=deprecated -Wno-error=deprecated-declarations -O3" \
+    -Dldflags="-Wl,-O3" \
+    -Dmanpage-build=enabled \
     -D{libmpv,tests}=true \
     -D{gl,iconv,lcms2,lua,jpeg,plain-gl,zlib}=enabled \
     -D{cocoa,coreaudio,gl-cocoa,videotoolbox-gl,videotoolbox-pl}=enabled \
-    -D{swift-build,macos-cocoa-cb,macos-media-player,macos-touchbar,vulkan}=enabled
+    -D{swift-build,macos-cocoa-cb,macos-media-player,macos-touchbar,vulkan}=enabled \
+    -Dsysconfdir=/private/etc \
+    --buildtype=release
 
 meson compile -C build -j4
 meson install -C build
